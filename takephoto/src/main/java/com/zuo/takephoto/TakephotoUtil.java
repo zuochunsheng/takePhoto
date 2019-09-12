@@ -127,7 +127,7 @@ public class TakephotoUtil {
 
 
     //回调 ---十分巧妙
-    public void onRequestPermissionsResult(int resultCode, String result, String... args) {
+    void onRequestPermissionsResult(int resultCode, String result, String... args) {
 
         Log.d("zuo", "mineFragment onActivityResult");
 

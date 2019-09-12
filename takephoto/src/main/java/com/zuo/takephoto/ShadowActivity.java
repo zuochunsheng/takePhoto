@@ -5,19 +5,16 @@ import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.yalantis.ucrop.UCrop;
 import com.zuo.takephoto.util.FileProvider;
-
 import java.io.File;
 
 
