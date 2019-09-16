@@ -2,7 +2,7 @@
 拍照和相册选择
 
         //引用(最新)
-        implementation 'com.github.zuochunsheng:takephoto:1.2'
+        implementation 'com.github.zuochunsheng:takephoto:1.3'
 
         // 使用方法
         //isNeedCrop 是否裁剪 默认false
