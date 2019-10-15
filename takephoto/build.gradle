@@ -1,4 +1,6 @@
 apply plugin: 'com.android.library'
+apply plugin: 'com.github.dcendents.android-maven'
+apply plugin: 'com.jfrog.bintray'
 
 android {
     compileSdkVersion 28
@@ -27,18 +29,106 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-    implementation 'androidx.appcompat:appcompat:1.0.0-beta01'
     testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test:runner:1.1.0-alpha4'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0-alpha4'
+    androidTestImplementation 'com.android.support.test:runner:1.0.2'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 
-    api 'com.android.support:design:28.0.0'
+    implementation 'com.android.support:appcompat-v7:28.0.0'
+    implementation 'com.android.support:design:28.0.0'
+
 
     //permission
-    api 'com.github.zuochunsheng:permission:0.3'
+    api 'com.github.zuochunsheng:permission:0.5'
 
     //图片选择  裁剪
     api 'com.github.yalantis:ucrop:2.2.2'
 
 
+}
+
+
+version = MAVEN_VERSION
+def siteUrl = 'https://github.com/zuochunsheng/takePhoto'    // project homepage
+def gitUrl = 'https://github.com/zuochunsheng/takePhoto.git' // project git
+group = MAVEN_GROUP_ID// Maven Group ID for the artifact
+// 根节点添加
+install {
+    repositories.mavenInstaller {
+        // This generates POM.xml with proper parameters
+        pom {
+            project {
+                //version MAVEN_VERSION
+                //groupId MAVEN_GROUP_ID
+                //artifactId MAVEN_ARTIFACT_ID
+                packaging MAVEN_PACKAGING
+                description MAVEN_DESCRIPTION
+                name MAVEN_NAME
+                url MAVEN_URL
+                inceptionYear MAVEN_INCEPTION_YEAR
+
+                scm {
+                    tag "1.0"
+                    url siteUrl
+                    connection gitUrl
+                    developerConnection gitUrl
+                }
+                licenses {
+                    license {
+                        name 'The Apache Software License, Version 2.0'//刚才创建仓库时的许可证
+                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                        //distribution "repo"
+                    }
+                }
+                developers {
+                    developer {
+                        id POM_DEVELOPER_ID
+                        name POM_DEVELOPER_NAME
+                        email POM_DEVELOPER_EMAIL
+                    }
+                }
+
+            }
+        }
+    }
+}
+
+//打包 sourcesjar
+task sourcesJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    classifier = 'sources'
+}
+//打包 javadocjar
+task javadoc(type: Javadoc) {
+    source = android.sourceSets.main.java.srcDirs
+    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+artifacts {
+    archives javadocJar
+    archives sourcesJar
+}
+
+Properties properties = new Properties()
+boolean isHasFile = false
+if (project.rootProject.file('local.properties') != null){
+    isHasFile = true
+    properties.load(project.rootProject.file('local.properties').newDataInputStream())
+}
+bintray {
+    user = isHasFile ? properties.getProperty("bintray.user") : System.getenv("bintray.user")
+    key = isHasFile ? properties.getProperty("bintray.apikey") : System.getenv("bintray.apikey")
+    configurations = ['archives']
+    pkg {
+        repo = "maven"//仓库名称
+        name = MAVEN_NAME//项目名称  project name in jcenter
+        websiteUrl = siteUrl
+        vcsUrl = gitUrl
+        licenses = ["Apache-2.0"]
+        publish = true
+    }
 }
