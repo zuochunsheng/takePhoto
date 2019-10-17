@@ -47,6 +47,10 @@ public class TakephotoUtil {
         mUploadListener = nUploadListener;
     }
 
+    public void releaseInstance() {
+        instance = null;
+    }
+
     public TakephotoUtil setIsNeedCrop(boolean isNeedCrop) {
         this.isNeedCrop = isNeedCrop;
         return instance ;
